@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,8 +41,9 @@ class ArticleController extends AbstractController
      * @Route("/news/{slug}/heart", name="article_toggle_heart", methods={"POST"})
      * @throws Exception
      */
-    public function toggleArticleHeart($slug)
+    public function toggleArticleHeart($slug, LoggerInterface $logger)
     {
+        $logger->info('An article is being hearted!');
         // TODO - actually heart/unheart the article!
         return $this->json(['hearts' => random_int(5, 100)]);
     }
