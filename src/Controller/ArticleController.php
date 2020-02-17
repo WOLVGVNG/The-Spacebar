@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,16 +12,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleController extends AbstractController
 {
     /**
-     * @Route("/")
-     * @return Response
+     * @Route("/", name="app_homepage")
      */
     public function homepage()
     {
-        return new Response('My first symfony app');
+        return $this->render('articles/homepage.html.twig');
     }
 
     /**
-     * @Route("/news/{slug?}")
+     * @Route("/news/{slug}", name="article_show")
      */
     public function show($slug)
     {
@@ -30,8 +30,19 @@ class ArticleController extends AbstractController
             'I like bacon too! Buy some from my site! bakinsomebacon.com',
         ];
         return $this->render('articles/show.html.twig', [
-           'title' => ucwords(str_replace('-', ' ', $slug)),
+            'slug' => $slug,
+            'title' => ucwords(str_replace('-', ' ', $slug)),
             'comments' => $comments
         ]);
+    }
+
+    /**
+     * @Route("/news/{slug}/heart", name="article_toggle_heart", methods={"POST"})
+     * @throws Exception
+     */
+    public function toggleArticleHeart($slug)
+    {
+        // TODO - actually heart/unheart the article!
+        return $this->json(['hearts' => random_int(5, 100)]);
     }
 }
