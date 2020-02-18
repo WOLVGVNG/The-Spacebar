@@ -2,12 +2,12 @@
 
 namespace App\Controller;
 
+use App\Service\MarkdownHelper;
 use Exception;
-use Michelf\MarkdownInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 
@@ -18,13 +18,16 @@ class ArticleController extends AbstractController
      */
     public function homepage()
     {
-        return $this->render('articles/homepage.html.twig');
+        return $this->render('article/homepage.html.twig');
     }
 
     /**
      * @Route("/news/{slug}", name="article_show")
+     * @param $slug
+     * @param MarkdownHelper $markdownHelper
+     * @return Response
      */
-    public function show($slug, MarkdownInterface $markdown, AdapterInterface $cache)
+    public function show($slug, MarkdownHelper $markdownHelper)
     {
         $comments = [
             'I ate a normal rock once. It did NOT taste like bacon!',
@@ -51,14 +54,9 @@ cow est ribeye adipisicing. Pig hamburger pork belly enim. Do porchetta minim ca
 fugiat.
 EOF;
 
-        $item = $cache->getItem('markdown_'.md5($articleContent));
-        if (!$item->isHit()) {
-            $item->set($markdown->transform($articleContent));
-            $cache->save($item);
-        }
-        $articleContent = $item->get();
+        $articleContent = $markdownHelper->parse($articleContent);
 
-        return $this->render('articles/show.html.twig', [
+        return $this->render('article/show.html.twig', [
             'slug' => $slug,
             'title' => ucwords(str_replace('-', ' ', $slug)),
             'comments' => $comments,
@@ -68,6 +66,9 @@ EOF;
 
     /**
      * @Route("/news/{slug}/heart", name="article_toggle_heart", methods={"POST"})
+     * @param $slug
+     * @param LoggerInterface $logger
+     * @return JsonResponse
      * @throws Exception
      */
     public function toggleArticleHeart($slug, LoggerInterface $logger)
