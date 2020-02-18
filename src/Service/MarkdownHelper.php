@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use Michelf\MarkdownInterface;
+use Nexy\Slack\ActionConfirmation;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
@@ -25,7 +26,6 @@ class MarkdownHelper
         if (stripos($source, 'bacon') !== false) {
             $this->logger->info('They are talking about bacon again!');
         }
-        dd($this->isDebug);
         if ($this->isDebug) {
             return $this->markdown->transform($source);
         }
