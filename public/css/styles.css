@@ -10,7 +10,8 @@ html {height:100%}
 /* NAVIGATION */
 
 .navbar-bg {
-    background: url('../images/space-nav.jpg');
+    /*background: url('../images/space-nav.jpg');*/
+    background-color: #6c757d;
     background-size: 80%;
 }
 
@@ -71,7 +72,7 @@ html {height:100%}
     background: #fff;
     margin-top: 30px;
     border-radius: 5px;
-    border-top: 5px solid hotpink;
+    border-top: 5px solid #575456;
 }
 
 /* ARTICLES */
