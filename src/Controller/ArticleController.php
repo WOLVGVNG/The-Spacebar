@@ -33,17 +33,14 @@ class ArticleController extends AbstractController
      * @param $slug
      * @return Response
      */
-    public function show($slug, SlackClient $slack, EntityManagerInterface $em)
+    public function show(Article $article, SlackClient $slack)
     {
-        if ($slug === 'khan') {
+        if ($article->getSlug() === 'khan') {
             $slack->sendMessage('Spacebar', 'Hello');
         }
 
-        $repository = $em->getRepository(Article::class);
-        /** @var Article $article */
-        $article = $repository->findOneBy(['slug' => $slug]);
         if (!$article) {
-            throw $this->createNotFoundException(sprintf('No article for slug "%s"', $slug));
+            throw $this->createNotFoundException(sprintf('No article for slug "%s"', $article->getSlug()));
         }
 
         $comments = [
