@@ -62,10 +62,11 @@ class ArticleController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    public function toggleArticleHeart(Article $article, LoggerInterface $logger)
+    public function toggleArticleHeart(Article $article, LoggerInterface $logger, EntityManagerInterface $em)
     {
+        $article->incrementHeartCount();
+        $em->flush();
         $logger->info('An article is being hearted!');
-        // TODO - actually heart/unheart the article!
-        return $this->json(['hearts' => random_int(5, 100)]);
+        return $this->json(['hearts' => $article->getHeartCount()]);
     }
 }
