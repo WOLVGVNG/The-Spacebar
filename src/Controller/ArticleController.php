@@ -62,7 +62,7 @@ class ArticleController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    public function toggleArticleHeart($slug, LoggerInterface $logger)
+    public function toggleArticleHeart(Article $article, LoggerInterface $logger)
     {
         $logger->info('An article is being hearted!');
         // TODO - actually heart/unheart the article!
