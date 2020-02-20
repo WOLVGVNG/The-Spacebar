@@ -40,14 +40,6 @@ class ArticleFixtures extends BaseFixture
             if ($this->faker->boolean(70)) {
                 $article->setPublishedAt($this->faker->dateTimeBetween('-100 days','-1 days'));
             }
-
-            for ($i = 0; $i < 5; $i++) {
-                $comment = new Comment();
-                $comment->setAuthorName($this->faker->name)
-                    ->setContent($this->faker->realText(100))
-                    ->setArticle($article);
-                $manager->persist($comment);
-            }
         });
 
         $manager->flush();
