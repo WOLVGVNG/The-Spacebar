@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Article;
+use App\Entity\Comment;
 use Doctrine\Persistence\ObjectManager;
 
 class ArticleFixtures extends BaseFixture
@@ -27,7 +28,7 @@ class ArticleFixtures extends BaseFixture
 
     protected function loadData(ObjectManager $manager)
     {
-        $this->createMany(Article::class, 10, function(Article $article, $count) {
+        $this->createMany(Article::class, 10, function(Article $article, $count) use($manager) {
             $title = $this->faker->randomElement(self::$articleTitles);
             $article->setTitle($title)
                 ->setAuthor($this->faker->randomElement(self::$articleAuthors))
@@ -38,6 +39,14 @@ class ArticleFixtures extends BaseFixture
             // publish most articles
             if ($this->faker->boolean(70)) {
                 $article->setPublishedAt($this->faker->dateTimeBetween('-100 days','-1 days'));
+            }
+
+            for ($i = 0; $i < 5; $i++) {
+                $comment = new Comment();
+                $comment->setAuthorName($this->faker->name)
+                    ->setContent($this->faker->realText(100))
+                    ->setArticle($article);
+                $manager->persist($comment);
             }
         });
 
