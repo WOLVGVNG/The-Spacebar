@@ -15,10 +15,13 @@ class CommentFixture extends BaseFixture implements DependentFixtureInterface
             $article = $this->getRandomReference(Article::class);
             $comment->setAuthorName($this->faker->name)
                 ->setContent($this->faker->realText(100))
-                ->setCreatedAt($this->faker->dateTimeBetween($article->getPublishedAt(), '-1 seconds'))
+                ->setIsDeleted($this->faker->boolean(20))
                 ->setArticle($article);
-        });
 
+            if ($article->getPublishedAt()) {
+                $comment->setCreatedAt($this->faker->dateTimeBetween($article->getPublishedAt(), '-1 seconds'));
+            }
+        });
         $manager->flush();
     }
 

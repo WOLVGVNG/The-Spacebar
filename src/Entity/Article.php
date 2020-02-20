@@ -172,6 +172,22 @@ class Article
         return $this->comments;
     }
 
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getNonDeletedComments(): Collection
+    {
+        $comments = [];
+
+        foreach ($this->getComments() as $comment) {
+            if (!$comment->getIsDeleted()) {
+                $comments[] = $comment;
+            }
+        }
+
+        return new ArrayCollection($comments);
+    }
+
     public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
